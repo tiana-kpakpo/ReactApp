@@ -1,4 +1,8 @@
 import React, { useState, useEffect} from 'react'
+import Slide1 from '../assets/cart.jpg'
+import Slide2 from '../assets/menf.jpg'
+import Slide3 from '../assets/sofa.webp'
+import Slide4 from '../assets/womenf.jpg'
 
 
 function Product() {
@@ -26,16 +30,16 @@ console.log(products)
    
      <div className="carousel w-full">
   <div id="item1" className="carousel-item w-full">
-    <img src="/assets/cart.jpg" className="w-full" />
+    <img src= {Slide1} className="w-full h-96 object-cover" />
   </div> 
-  <div id="item2" className="carousel-item w-full">
-    <img src="" className="w-full" />
+  <div id="item2" className="carousel-item w-full h-96 object-cover">
+    <img src={Slide3}className="w-full" />
   </div> 
-  <div id="item3" className="carousel-item w-full">
-    <img src="/images/stock/photo-1414694762283-acccc27bca85.jpg" className="w-full" />
+  <div id="item3" className="carousel-item w-full h-96 object-cover">
+    <img src={Slide2} className="w-full" />
   </div> 
-  <div id="item4" className="carousel-item w-full">
-    <img src="/images/stock/photo-1665553365602-b2fb8e5d1707.jpg" className="w-full" />
+  <div id="item4" className="carousel-item w-full h-96 object-cover">
+    <img src={Slide4} className="w-full" />
   </div>
 </div> 
 <div className="flex justify-center w-full py-2 gap-2">
@@ -62,7 +66,8 @@ console.log(products)
     <p> ${item.price}</p>
     <p> {item.description}</p>
     <div className="card-actions justify-end">
-      <button className="btn bg-green-600 text-white hover:text-green-600">Buy Now</button>
+    <button className="button w-32 bg-green-600 text-white hover:bg-slate hover:text-green-600">Buy Now</button>
+
     </div>
   </div>
 </div>
