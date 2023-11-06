@@ -1,128 +1,93 @@
-
-// import React from 'react';
-
-
-
-
-// function Login() {
-//   return (
-// <>
-    
-//     <div className="Wrapper bg-slate">
-
-//     <div className="blur-background"></div>
-
-//       <form action="#" className="flex justify-center items-center">
-//         <div className="brand">
-//           <img src="LoGo.png" alt="logo" />
-//         </div>
-//         <div className="error">
-//           <span className="error-message"></span>
-//         </div>
-//         <div className="form-group">
-//           <div className="input-group">
-//             <label htmlFor="email"></label>
-//             <input type="email" name="email" id="email" placeholder="Enter your email" />
-//             <label htmlFor="password"></label>
-//             <input type="password" name="password" id="password" placeholder="Password" />
-//           </div>
-//           <div className="input-group">
-//             <button type="button">Sign In</button>
-//           </div>
-//         </div>
-//         <small>
-//           Sign up <a href="#">here</a>
-//         </small>
-//       </form>
-//     </div>
-
-//     </>
-//   );
-// }
-
-// export default Login;
-
-
-
-
 import '../Pages/Login.css'
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from '../context/useAuth';
+
 
 
 const Login = () => {
+    const {login, setAuth} = useAuth();
 
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    
     const loginBtn = async (e) => {
         e.preventDefault();
-
-        if (email === "" || email === null || password === "" || password === null) {
-            setErrorMessage("Please fill all fields!!!")
-            setTimeout(() => {
-                setErrorMessage(errorMessage)
-            }, 2000);
-            return
+    
+        if (!email || !password) {
+            setErrorMessage('Please fill in all fields!');
+            setTimeout(() => setErrorMessage(''), 3000);
+            return;
         }
-
+    
         try {
-            const result = await fetch(`http://localhost:7070/api/login`, {
+            const response = await fetch(" http://localhost:7070/api/login", {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "email": email,
-                    "password": password
-                })
-            })
-
-            const response = await result.json();
-            if (result.status == 200) {
-                navigate("/home");
-                console.log(response.id);
+                    email: email,
+                    password: password,
+                }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                if (data.id > 0) {
+                    setAuth(true)
+                    handleSuccessfulLogin(data);
+                } else {
+                    setErrorMessage('Invalid username or password');
+                    setTimeout(() => setErrorMessage(''), 3000);
+                }
+            } else {
+                setErrorMessage('Invalid username or password');
+                setTimeout(() => setErrorMessage(''), 3000);
             }
-            if (result.status != 200) {
-                setErrorMessage("Invalid username or password")
-                setTimeout(() => {
-                    setErrorMessage("")
-                    setErrorMessage(errorMessage)
-                }, 2000);
-            }
-
         } catch (error) {
             console.error(error);
+            setErrorMessage('Network error. Please try again later.');
+            setTimeout(() => setErrorMessage(''), 3000);
         }
-
-    }
+    };
+    
+    const handleSuccessfulLogin = (data) => {
+        login(data);
+    
+        navigate('/home');
+    
+        setSuccessMessage('Login successful');
+        setTimeout(() => setSuccessMessage(''), 3000);
+    };
 
     return (
         <div className='con'>
             <main className="wrapper">
-                <strong style={{color: 'white', textAlign: 'center', fontSize: 25}} >
-                <h1 >Welcome </h1>
-                    </strong>
+                <strong style={{ color: 'white', textAlign: 'center', fontSize: 25 }} >
+                    <h1 >Welcome </h1>
+                </strong>
                 {errorMessage && (
-                    <div className="message">
+                    <div className="message text-red-600">
                         <p>{errorMessage}</p>
                     </div>
                 )
 
                 }
 
-  <div className="blur-background"></div>
+                <div className="blur-background"></div>
 
-  <form>
+                <form>
                     <div className="form-controls">
-                       
+
                         <input type="email" name="email" placeholder="Email Address" id="email" onChange={(e) => setEmail(e.target.value)} required />
                     </div>
                     <div className="form-controls">
-                       
+
                         <input type="password" name="password" id="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
                         <i className="bi bi-eye-slash" id="togglePassword"></i>
                     </div>
@@ -130,10 +95,10 @@ const Login = () => {
                     <button type="submit" className="submit" onClick={loginBtn}>Login</button>
 
 
-                    <a href="" style={{color: 'white'}}>Forgot password?</a>
+                    <a href="" style={{ color: 'white' }}>Forgot password?</a>
                 </form>
 
-                <p style={{color: 'white', textAlign: 'center'}}>
+                <p style={{ color: 'white', textAlign: 'center' }}>
                     Don't have an account?
                     <Link to="/signup">
                         Sign up
@@ -143,5 +108,6 @@ const Login = () => {
         </div >
     )
 }
+
 
 export default Login
