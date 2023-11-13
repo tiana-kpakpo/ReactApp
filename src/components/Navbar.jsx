@@ -1,21 +1,39 @@
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '../assets/logo.png';
 import useAuth from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function Navbar() {
-  const { currentUser, auth, logout } = useAuth();
+  const { user, setUser, setAuth, auth, logout,getCartCount, } = useAuth();
   const navigate = useNavigate();
   console.log(auth)
 
+  useEffect(() => {
+    const localToken = localStorage.getItem("token");
+    if (localToken && localToken.length > 0) {
+      setAuth(true);
+    let user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+    } else {
+      setAuth(false);
+    }
+  } , [setUser, setAuth]);
+
+  const clearUserInfo = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("response");
+  };
+
   const onLogout = () => {
     logout();
+    clearUserInfo
     navigate('/login');
   };
 
   return (
-    <div className="bg-green-600 border-b border-gray-500">
+    <div sticky = 'top' className="bg-green-600 border-b border-gray-500">
       <div className="flex items-center justify-between max-w-screen-xl mx-auto text-white navbar">
         <img src={logo} alt="" className="w-32 h-24" />
 
@@ -51,14 +69,15 @@ export default function Navbar() {
               d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
             />
           </svg>
-          <div className='border-l-2' />
+          <div className='border-l-2 relative' />
+          {/* <div className="absolute top-0 right-14 bg-white text-black px-2 py-1 rounded-full increment">{cartCount}</div> */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 hover:text-slate-700"
+            className="w-6 h-6 hover:text-slate-700" onClick={() => addToCart()}
           >
             <path
               strokeLinecap="round"
@@ -69,11 +88,20 @@ export default function Navbar() {
           <div>
             {auth ? (
               <div className='' >
+                 {/* {auth && user && <p>Welcome, {user.name}</p>} */}
+
+                 {getCartCount() > 0 && (
+                    <span className="absolute top-0 right-14 bg-white text-black px-2 py-1 rounded-full increment">
+                      {getCartCount()}
+                    </span>
+                  )}
+                
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hover:text-slate-700" onClick={onLogout}>
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                 </svg>
 
               </div>
+              
             ) : (
               <Link to="/login">
                 <div className=''>

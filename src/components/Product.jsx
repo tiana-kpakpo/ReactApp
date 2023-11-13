@@ -3,11 +3,17 @@ import Slide1 from '../assets/cart.jpg'
 import Slide2 from '../assets/menf.jpg'
 import Slide3 from '../assets/sofa.webp'
 import Slide4 from '../assets/womenf.jpg'
+import useAuth from '../context/useAuth'
 
 
 function Product() {
   const [products, setProducts] = useState(null)
+  // const addToCart = useAuth();
+  const {user, setCartCount, cart } = useAuth();
+ 
 console.log(products)
+
+
   useEffect( () => {
     fetch('http://localhost:7070/product/v1/products')
     .then(response => {
@@ -25,6 +31,101 @@ console.log(products)
     
     });
   }, [])
+
+  
+  const cartBtn = async (product_id) => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    console.log(user)
+  
+    if (!user || !user.id) { 
+      alert('Login to add to cart');
+        console.error("User not found in localStorage");
+
+        if (!user || !user.id || !user.cart || !Array.isArray(user.cart)) {
+          console.error("Invalid user or user structure");
+        }
+        return;
+    }
+
+    // const isInCart = user.cart.some(item => item && item.product_id === product_id);
+
+    // if (isInCart) {
+    //   alert('Product has already been added to cart');
+    //   return;
+    // }
+
+    let customer_id = user.id;
+
+
+    const order = await fetch('http://localhost:7070/shop/v1/order', {
+        method: 'POST',
+        headers: {
+            "content-type": "application/json "
+        },
+        body: JSON.stringify({
+            product_id: Number(product_id),
+            customer_id: Number(customer_id)
+        })
+    })
+
+    try {
+      if (order.status === 409) {
+        let res = await order.json();
+        console.error('Product has already been added to cart', res);
+        return;
+      }
+  
+      if (order.status === 200 || order.status === 201) {
+        let res = await order.json();
+        console.log(res);
+  
+        alert("Item successfully added to cart");
+        handleAddToCart();
+      }
+    } catch (error) {
+      console.error('Error processing the response:', error);
+    }
+
+   
+};
+
+console.log(user);
+console.log(cart);
+
+const handleAddToCart = async () => {
+  let user = JSON.parse(localStorage.getItem("user"));
+  if (!user || !user.id) {
+    alert('Login to add to cart')
+      console.error("User not found in localStorage");
+      return;
+  }
+
+  const res = await fetch('http://localhost:7070/shop/v1/orders-with-customerId', {
+      method: 'POST',
+      headers: {
+          "content-type": "application/json"
+      },
+      body: JSON.stringify({
+          customer_id: user.id
+      })
+
+  });
+
+  if (res.status == 200) {
+      let orders = await res.json();
+
+      const { order } = orders;
+      const count = order.length;
+
+      setCartCount(count);
+  }
+}
+
+useEffect(() => {
+  handleAddToCart();
+}, [setCartCount]);
+
+
   return (
     <>
    
@@ -49,6 +150,8 @@ console.log(products)
   <a href="#item4" className="btn btn-xs">4</a>
 </div> 
 
+<h1></h1>
+
  <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mx-auto max-w-screen-xl pt-8 '>
 
     {products?.map(item => (
@@ -66,7 +169,7 @@ console.log(products)
     <p> ${item.price}</p>
     <p> {item.description}</p>
     <div className="card-actions justify-end">
-    <button className="button w-32 bg-green-600 text-white hover:bg-slate hover:text-green-600">Buy Now</button>
+    <button className="button w-32 bg-green-600 text-white hover:bg-slate hover:text-green-600" id={item.id} onClick={() => cartBtn(item.id)} >Buy Now</button>
 
     </div>
   </div>

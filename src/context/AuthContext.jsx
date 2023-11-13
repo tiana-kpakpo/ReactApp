@@ -1,113 +1,4 @@
-// import React, { createContext, useContext, useEffect, useState } from "react";
-// // import { Navigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-
-// const AuthContext = createContext();
-
-// export const useAuth = () => {
-//   return useContext(AuthProvider)
-
-// }
-
-// export function AuthProvider({ children }) {
-//   const [currentUser, setCurrentUser] = useState(null);
-//   const navigate = useNavigate();
-
-//   // useEffect(() => {
-//   //   const isUserAuth = async () => {
-//   //     try {
-//   //       const response = await fetch('http://localhost:7070/api/login', {
-//   //         method: 'GET',
-//   //       });
-//   //       if (response.ok) {
-//   //         const userData = await response.json();
-//   //         setCurrentUser(userData);
-//   //       } else {
-//   //         setCurrentUser(null);
-//   //       }
-//   //     } catch (error) {
-//   //       console.log(error);
-//   //     }
-//   //   };
-//   //   isUserAuth();
-//   // }, []);
-
-//   const login = async (credentials) => {
-//     try{
-//       const response = await fetch('http://localhost:7070/api/login', {
-//         method: 'POST',
-//         mode: 'cors',
-//         headers: {
-//             "Content-type": "application/json; charset=UTF-8"
-//         },
-//         body: JSON.stringify(credentials)
-//     })
-
-//     if (response.ok) {
-//       const userData = await response.json();
-//       setCurrentUser(userData);
-//       navigate ('/home')
-//     } else {
-//       setCurrentUser(null);
-//     }
-
-//     }catch(error){
-//       console.log(error)
-//     }
-    
-//   };
-
-//   const logout = () => {
-//     setCurrentUser(null);
-//   };
-
-//   const values = {
-//     currentUser,login,logout
-//   }
-//   return (
-//     <AuthContext.Provider value={values}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-
-
-
-// import { createContext, useState } from "react"
-
-// export const AuthContext = createContext();
-
-// // eslint-disable-next-line react/prop-types
-// export const AuthProvider = ({ children }) => {
-//     const [currentUser, setCurrentUser] = useState([''])
-//     const [auth, setAuth] = useState(false)
-
-//     const login = (response) => {
-//         setCurrentUser(response)
-//     }
-
-//     const logout = () => {
-//         setCurrentUser(null)
-//     }
-
-//     const info = {
-//         auth,
-//         setAuth,
-//         currentUser,
-//         setCurrentUser,
-//         login,
-//         logout,
-//     }
-
-//     return (
-//         <AuthContext.Provider value={info}>
-//             {children}
-//         </AuthContext.Provider>
-//     )
-// }
-
-
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useEffect, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -118,17 +9,77 @@ export const useAuth = () => {
 export const AuthProvider =  ({ children }) => {
   const [user, setUser] = useState(null);
   const [auth, setAuth] = useState(false);
+  const [token, setToken] = useState([''])
+  const [cart, setCart] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
 
-  const login = (response) => {
-    setUser(response);
+  const login = (user) => {
+    // setUser(response);
+    if(user.id) {
+        const randomToken = Array.from({ length:32}, () => 
+        Math.random().toString(36)[2]).join('');
+        setToken(randomToken);
+        localStorage.setItem('token', randomToken);
+
+        // let user = JSON.stringify(response);
+
+        setUser(user)
+        setAuth(true)
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('cart', JSON.stringify(cart));
+        // localStorage.setItem('response', user)
+
+        setCart([]);
+        return
+    }
   }
+
+  // const addToCart = (item) => {
+  //   setCart((prevCart) => [...prevCart, item]);
+  //   setCartCount((prevCount) => prevCount + 1);
+  //   console.log(addToCart)
+  //   localStorage.setItem('cart', JSON.stringify(cart))
+  // };
+
+  const addToCart = (item) => {
+    setCart((prevCart) => {
+      const newCart = [...prevCart, item];
+      setCartCount(newCart.length);
+      localStorage.setItem('cart', JSON.stringify(newCart));
+      return newCart;
+    });
+  };
+  
+
+  const getCartCount = () => {
+    return cartCount;
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    setCartCount(0);
+  };
 
   const logout = () => {
     setUser(null);
+    setToken(null)
+    setAuth(false)
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
+  useEffect(() => {
+    const localToken = localStorage.getItem("token");
+    if (localToken && localToken.length > 0) {
+        setAuth(true);
+    } else {
+        setAuth(false);
+        console.log("user not authenticated")
+    }
+}, [user, setToken]);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, setAuth, setUser, auth }}>
+    <AuthContext.Provider value={{ user, login, logout, setAuth, setUser, auth,token, setToken, addToCart, cart, setCart, clearCart, getCartCount, cartCount, setCartCount }}>
       {children}
     </AuthContext.Provider>
   );
