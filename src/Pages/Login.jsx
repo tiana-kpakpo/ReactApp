@@ -39,8 +39,12 @@ const Login = () => {
             if (response.ok) {
                 const data = await response.json();
                 if (data.id > 0) {
+                    login(data)
                     setAuth(true)
-                    handleSuccessfulLogin(data);
+                    setSuccessMessage('Login successful')
+                    setTimeout(() => setSuccessMessage(''), 3000);
+                    navigate('/home');
+                    // handleSuccessfulLogin(data);
                 } else {
                     setErrorMessage('Invalid username or password');
                     setTimeout(() => setErrorMessage(''), 3000);
@@ -56,14 +60,14 @@ const Login = () => {
         }
     };
     
-    const handleSuccessfulLogin = (data) => {
-        login(data);
+    // const handleSuccessfulLogin = (data) => {
+    //     login(data);
     
-        navigate('/home');
+    //     navigate('/home');
     
-        setSuccessMessage('Login successful');
-        setTimeout(() => setSuccessMessage(''), 3000);
-    };
+    //     setSuccessMessage('Login successful');
+    //     setTimeout(() => setSuccessMessage(''), 3000);
+    // };
 
     return (
         <div className='con'>

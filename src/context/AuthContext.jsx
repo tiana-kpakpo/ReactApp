@@ -21,13 +21,10 @@ export const AuthProvider =  ({ children }) => {
         setToken(randomToken);
         localStorage.setItem('token', randomToken);
 
-        // let user = JSON.stringify(response);
-
         setUser(user)
         setAuth(true)
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('cart', JSON.stringify(cart));
-        // localStorage.setItem('response', user)
 
         setCart([]);
         return
@@ -66,6 +63,7 @@ export const AuthProvider =  ({ children }) => {
     setAuth(false)
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("cart");
   };
 
   useEffect(() => {

@@ -4,19 +4,20 @@ import Slide2 from '../assets/menf.jpg'
 import Slide3 from '../assets/sofa.webp'
 import Slide4 from '../assets/womenf.jpg'
 import useAuth from '../context/useAuth'
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Product() {
   const [products, setProducts] = useState(null)
   // const addToCart = useAuth();
-  const {user, setCartCount, cart } = useAuth();
+  const { setCartCount, cart } = useAuth();
  
 console.log(products)
 
-
   useEffect( () => {
     fetch('http://localhost:7070/product/v1/products')
-    .then(response => {
+.then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -28,7 +29,7 @@ console.log(products)
     })
     .catch(error => {
       console.error('Error fetching data:', error);
-    
+        
     });
   }, [])
 
@@ -36,23 +37,14 @@ console.log(products)
   const cartBtn = async (product_id) => {
     let user = JSON.parse(localStorage.getItem("user"));
     console.log(user)
+
+    // const navigate = useNavigate();
   
     if (!user || !user.id) { 
       alert('Login to add to cart');
+      // navigate('/login');
         console.error("User not found in localStorage");
-
-        if (!user || !user.id || !user.cart || !Array.isArray(user.cart)) {
-          console.error("Invalid user or user structure");
-        }
-        return;
     }
-
-    // const isInCart = user.cart.some(item => item && item.product_id === product_id);
-
-    // if (isInCart) {
-    //   alert('Product has already been added to cart');
-    //   return;
-    // }
 
     let customer_id = user.id;
 
@@ -71,6 +63,7 @@ console.log(products)
     try {
       if (order.status === 409) {
         let res = await order.json();
+        alert('Item has already been added to cart')
         console.error('Product has already been added to cart', res);
         return;
       }
@@ -89,13 +82,12 @@ console.log(products)
    
 };
 
-console.log(user);
+// console.log(currentUser);
 console.log(cart);
 
 const handleAddToCart = async () => {
   let user = JSON.parse(localStorage.getItem("user"));
   if (!user || !user.id) {
-    alert('Login to add to cart')
       console.error("User not found in localStorage");
       return;
   }
@@ -123,7 +115,7 @@ const handleAddToCart = async () => {
 
 useEffect(() => {
   handleAddToCart();
-}, [setCartCount]);
+});
 
 
   return (
