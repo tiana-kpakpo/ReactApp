@@ -1,7 +1,5 @@
 import './index.css'
 import './App.css'
-
-
 import Routes from './routes'
 import { AuthProvider } from './context/AuthContext'
 
