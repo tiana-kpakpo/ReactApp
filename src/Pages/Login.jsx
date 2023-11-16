@@ -44,7 +44,7 @@ const Login = () => {
                     setSuccessMessage('Login successful')
                     setTimeout(() => setSuccessMessage(''), 3000);
                     navigate('/home');
-                    // handleSuccessfulLogin(data);
+                    
                 } else {
                     setErrorMessage('Invalid username or password');
                     setTimeout(() => setErrorMessage(''), 3000);
@@ -59,15 +59,6 @@ const Login = () => {
             setTimeout(() => setErrorMessage(''), 3000);
         }
     };
-    
-    // const handleSuccessfulLogin = (data) => {
-    //     login(data);
-    
-    //     navigate('/home');
-    
-    //     setSuccessMessage('Login successful');
-    //     setTimeout(() => setSuccessMessage(''), 3000);
-    // };
 
     return (
         <div className='con'>

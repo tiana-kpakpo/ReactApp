@@ -76,8 +76,27 @@ export const AuthProvider =  ({ children }) => {
     }
 }, [user, setToken]);
 
+// useEffect(() => {
+//   const localToken = localStorage.getItem('token');
+//   const localUser = JSON.parse(localStorage.getItem('user'));
+//   const localCart = JSON.parse(localStorage.getItem('cart'));
+
+//   if (localToken && localToken.length > 0) {
+//     setAuth(true);
+//     setToken(localToken);
+//     setUser(localUser);
+//     setCart(localCart || []); 
+//     setCartCount((localCart && localCart.length) || 0); 
+//   } else {
+//     setAuth(false);
+//     console.log('user not authenticated');
+//   }
+// }, []);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, setAuth, setUser, auth,token, setToken, addToCart, cart, setCart, clearCart, getCartCount, cartCount, setCartCount }}>
+    <AuthContext.Provider value={{ 
+      user, login, logout, setAuth, setUser, auth,token, setToken, 
+      addToCart, cart, setCart, clearCart, getCartCount, cartCount, setCartCount }}>
       {children}
     </AuthContext.Provider>
   );
