@@ -142,9 +142,19 @@ useEffect(() => {
   <a href="#item4" className="btn btn-xs">4</a>
 </div> 
 
-<h1></h1>
 
- <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mx-auto max-w-screen-xl pt-8 '>
+<div className='grid grid-cols-1 md:grid-cols-3 gap-4 mx-auto max-w-screen-xl pt-8'> 
+
+<div className='md:col-span-1 grid grid-cols-1 gap-4'>
+  <h1>Adverts</h1>
+
+
+</div>
+
+ <div className='md:col-span-2 grid grid-cols-4 gap-4 '>
+ {/* <strong>
+<h1 className='flex justify-center text-center'>Product Listing</h1>
+  </strong> */}
 
     {products?.map(item => (
       // <div key={item.id}>
@@ -155,19 +165,27 @@ useEffect(() => {
       // </div>
 
       <div key={item.id} className="card bg-base-100 shadow-xl">
-  <figure><img src={item.image} alt="Shoes" className='w-56 h-56' /></figure>
-  <div className="card-body">
+  <figure><img src={item.image} alt="Shoes" className='w-24 h-24' /></figure>
+  <div className="card-body w-24">
     <h2 className="card-title">{item.name}</h2>
     <p> ${item.price}</p>
-    <p> {item.description}</p>
-    <div className="card-actions justify-end">
-    <button className="button w-32 bg-green-600 text-white hover:bg-slate hover:text-green-600" id={item.id} onClick={() => cartBtn(item.id)} >Buy Now</button>
+    {/* <p> {item.description}</p> */}
+    <div className="card-actions">
+    <button className=" w-32 flex justify-between bg-green-600 text-white hover:bg-slate hover:text-green-600" id={item.id} onClick={() => cartBtn(item.id)} >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+</svg>
+
+     Buy</button>
 
     </div>
   </div>
 </div>
     ))}
 </div> 
+
+
+</div>
 
 
     </>

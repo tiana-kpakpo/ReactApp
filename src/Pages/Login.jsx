@@ -2,6 +2,7 @@ import '../Pages/Login.css'
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from '../context/useAuth';
+import { GoogleLogin } from '@react-oauth/google';
 
 
 
@@ -61,6 +62,10 @@ const Login = () => {
     };
 
     return (
+
+        <>
+        
+        
         <div className='con'>
             <main className="wrapper">
                 <strong style={{ color: 'white', textAlign: 'center', fontSize: 25 }} >
@@ -91,16 +96,36 @@ const Login = () => {
 
 
                     <a href="" style={{ color: 'white' }}>Forgot password?</a>
+                    <p className='text-white p-5'>
+  <span className="border-b border-white mx-4 flex-1"></span>
+  OR
+  <span className="border-b border-white mx-4 flex-1"></span>
+</p>
+
+                    <GoogleLogin
+        onSuccess={credentialResponse => {
+          console.log(credentialResponse);
+        }}
+        onError={() => {
+          console.log('Login Failed');
+        }}
+
+
+      />,
+
                 </form>
 
                 <p style={{ color: 'white', textAlign: 'center' }}>
                     Don't have an account?
-                    <Link to="/signup">
+                    <Link to="/SignUp">
                         Sign up
                     </Link>
                 </p>
             </main>
         </div >
+
+        </>
+       
     )
 }
 

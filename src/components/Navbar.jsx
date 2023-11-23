@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function Navbar() {
-  const { currentUser, setUser, setAuth, auth, logout,getCartCount, } = useAuth();
+  const { user, setUser, setAuth, auth, logout,getCartCount, } = useAuth();
   const navigate = useNavigate();
   // console.log(auth)
 
@@ -33,9 +33,9 @@ export default function Navbar() {
   };
 
   return (
-    <div sticky = 'top' className="bg-green-600 border-b border-gray-500">
+    <div sticky = 'top' className=" bg-green-400 first-line:border-b border-gray-500">
       <div className="flex items-center justify-between max-w-screen-xl mx-auto text-white navbar">
-        <img src={logo} alt="" className="w-32 h-24" />
+        <img src={logo} alt="" className="w-32 h-24 hidden md:block" />
 
         <ul className="menu menu-vertical lg:menu-horizontal">
           <li>
@@ -60,7 +60,7 @@ export default function Navbar() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 hover:text-slate-700"
+            className="w-6 h-6 hover:text-slate-700 hidden md:block"
 
           >
             <path
@@ -70,7 +70,6 @@ export default function Navbar() {
             />
           </svg>
           <div className='border-l-2 relative' />
-          {/* <div className="absolute top-0 right-14 bg-white text-black px-2 py-1 rounded-full increment">{cartCount}</div> */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -87,10 +86,19 @@ export default function Navbar() {
           </svg>
           <div>
             {auth ? (
-              <div className='' >
-                  {/* <p> Welcome,
-                  {currentUser.name}
-                </p> */}
+              <div className='flex items-center' >
+                  <p className='mr-4 hidden md:block"'> Welcome,
+                  {user.name}
+                </p>
+                <div className="avatar online">
+    <div className="w-12 rounded-full">
+      {user.id === 2 ? (
+        <img src="https://randomuser.me/api/portraits/men/34.jpg" alt="Male Avatar" />
+      ) : (
+        <img src="https://randomuser.me/api/portraits/women/34.jpg" alt="Female Avatar" />
+      )}
+    </div>
+    </div>
 <Link to = "/cart">
 
                  {getCartCount() > 0 && (
@@ -101,9 +109,10 @@ export default function Navbar() {
                 
               
 </Link> 
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 hover:text-slate-700" onClick={onLogout}>
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                </svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" onClick={onLogout} >
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+</svg>
+
               </div>
               
             ) : (

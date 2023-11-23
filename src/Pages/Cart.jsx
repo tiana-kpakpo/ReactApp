@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../context/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, setCart, cartCount, setCartCount } = useAuth();
+  const { cart, setCart, } = useAuth();
+  const [total, setTotal] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
   console.log("cart", cart);
   const navigate = useNavigate();
 
@@ -13,13 +15,6 @@ const Cart = () => {
       console.log("user not found in local storage");
     }
     let customer_id = user.id;
-
-    // const localCart = JSON.parse(localStorage.getItem("cart"));
-
-    // if (localCart && localCart.length > 0) {
-    //   setCart(localCart);
-    //   return;
-    // }
 
     if (customer_id > 0) {
       console.log(customer_id);
@@ -48,6 +43,32 @@ const Cart = () => {
     console.log(cart);
   }, []);
 
+  
+  // const handleQuantityChange = (orderId, newQuantity) => {
+  //   const updatedCart = cart.map((item) => {
+  //     if (item.id === orderId) {
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;
+  //   });
+  //   setCart(updatedCart);
+  // };
+  
+  // const calculateTotal = () => {
+  //   return cart.reduce((acc, item) => acc + item.products.price * item.quantity, 0);
+  // };
+
+
+  
+
+  // useEffect(() => {
+  //   setTotal(calculateTotal());
+  // }, [cart]);
+
+  // const togglePopup = () => {
+  //   setShowPopup(!showPopup);
+  // };
+
   const removeItem = async (orderId) => {
     let confirmed = window.confirm("Are you sure you want to delete item?");
     if (confirmed) {
@@ -67,7 +88,6 @@ const Cart = () => {
         const updatedCart = cart.filter((item) => item.id !== orderId);
         console.log("updated cart", updatedCart);
         setCart(updatedCart);
-        // localStorage.setItem("cart", JSON.stringify(updatedCart));
 
         alert("item deleted successfully");
       } catch (error) {
@@ -75,8 +95,21 @@ const Cart = () => {
       }
     }
   };
-  // const filteredCart = cart.slice(2);
-  // console.log(filteredCart);
+  // const handleQuantityChange = (orderId, newQuantity) => {
+  //   const updatedCart = cart.map((item) => {
+  //     if (item.id === orderId) {
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;
+  //   });
+  //   setCart(updatedCart);
+  //   console.log('updated cart:', updatedCart)
+  //   setTotal(calculateTotal(updatedCart));
+  // };
+  
+  // const calculateTotal = (updatedCart) => {
+  //   return updatedCart.reduce((acc, item) => acc + item.products.price * item.quantity, 0);
+  // };
 
   return (
     <>
@@ -89,7 +122,7 @@ const Cart = () => {
         {cart?.map((item) => (
           <div
             key={item.id}
-            className="card lg:card-side bg-base-100 shadow-xl"
+            className="card w-96 lg:card-side bg-base-100 shadow-xl"
           >
             <figure>
               <img src={item.products?.image} alt="img" className="h-40" />
@@ -97,6 +130,19 @@ const Cart = () => {
             <div className="card-body">
               <h2 className="card-title">{item.products?.name}</h2>
               <p> ${item.products?.price}</p>
+
+              <div className="flex justify-end items-center">
+<div className="flex justify-between items-center" >
+  <div className="flex items-center">
+    <input type="number" min={1} className="border border-gray-300 rounded  px-2 py-1 w-16 text-center mr-2"
+                    value={item.quantity}
+                    onChange={(e) => handleQuantityChange(item.id, +e.target.value)} />
+
+  </div>
+
+</div>
+              
+
               <div className="card-actions justify-end text-red-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -114,6 +160,9 @@ const Cart = () => {
                   />
                 </svg>
               </div>
+
+              </div>
+
             </div>
           </div>
         ))}
