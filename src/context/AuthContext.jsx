@@ -12,6 +12,7 @@ export const AuthProvider =  ({ children }) => {
   const [token, setToken] = useState([''])
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [isGoogle, setIsGoogle] = useState(false);
 
   const login = (user) => {
     // setUser(response);
@@ -30,13 +31,6 @@ export const AuthProvider =  ({ children }) => {
         return
     }
   }
-
-  // const addToCart = (item) => {
-  //   setCart((prevCart) => [...prevCart, item]);
-  //   setCartCount((prevCount) => prevCount + 1);
-  //   console.log(addToCart)
-  //   localStorage.setItem('cart', JSON.stringify(cart))
-  // };
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -76,27 +70,11 @@ export const AuthProvider =  ({ children }) => {
     }
 }, [user, setToken]);
 
-// useEffect(() => {
-//   const localToken = localStorage.getItem('token');
-//   const localUser = JSON.parse(localStorage.getItem('user'));
-//   const localCart = JSON.parse(localStorage.getItem('cart'));
-
-//   if (localToken && localToken.length > 0) {
-//     setAuth(true);
-//     setToken(localToken);
-//     setUser(localUser);
-//     setCart(localCart || []); 
-//     setCartCount((localCart && localCart.length) || 0); 
-//   } else {
-//     setAuth(false);
-//     console.log('user not authenticated');
-//   }
-// }, []);
 
   return (
     <AuthContext.Provider value={{ 
       user, login, logout, setAuth, setUser, auth,token, setToken, 
-      addToCart, cart, setCart, clearCart, getCartCount, cartCount, setCartCount }}>
+      addToCart, cart, setCart, clearCart, getCartCount, cartCount, setCartCount, isGoogle, setIsGoogle }}>
       {children}
     </AuthContext.Provider>
   );

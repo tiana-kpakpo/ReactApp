@@ -3,7 +3,12 @@ import '../Pages/Login.css'
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from '../context/useAuth';
 
-const SignUp = () => {
+
+
+import React from 'react'
+
+export default function Signup() {
+  
   const navigate = useNavigate();
 
 
@@ -48,6 +53,7 @@ const SignUp = () => {
       <main className="wrapper">
         <strong style={{ color: 'white', textAlign: 'center', fontSize: 25 }} >
           <h1>Welcome</h1>
+          
         </strong>
         {errorMessage && (
           <div className="message text-red-600">
@@ -80,7 +86,5 @@ const SignUp = () => {
         </p>
       </main>
     </div>
-  );
-};
-
-export default SignUp;
+  )
+}
